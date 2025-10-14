@@ -1,3 +1,4 @@
+#include "Renderer/Shader.h"
 
 int main(int argc, char* argv[]) {
     neu::file::SetCurrentDirectory("Assets");
@@ -99,6 +100,7 @@ int main(int argc, char* argv[]) {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     */
 
+    /*
     // Vertex Shader
     std::string vs_source;
     neu::file::ReadTextFile("Shaders/basic.vert", vs_source);
@@ -139,12 +141,17 @@ int main(int argc, char* argv[]) {
 
         LOG_WARNING("Shader compilation failed: {}", infoLog);
     }
+    */
+
+    auto vs = neu::Resources().Get<neu::Shader>("shaders/basic.vert", GL_VERTEX_SHADER);
+    auto fs = neu::Resources().Get<neu::Shader>("shaders/basic.frag", GL_FRAGMENT_SHADER);
 
     // Program
     GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vs);
-    glAttachShader(shaderProgram, fs);
+    glAttachShader(shaderProgram, vs->m_shader);
+    glAttachShader(shaderProgram, fs->m_shader);
     glLinkProgram(shaderProgram);
+    GLint success;
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success)
     {
