@@ -143,10 +143,25 @@ int main(int argc, char* argv[]) {
     }
     */
 
+    // Shaders
     auto vs = neu::Resources().Get<neu::Shader>("shaders/basic.vert", GL_VERTEX_SHADER);
     auto fs = neu::Resources().Get<neu::Shader>("shaders/basic.frag", GL_FRAGMENT_SHADER);
 
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+
     // Program
+
+    auto program = std::make_shared<neu::Program>();
+    program->AttachShader(vs);
+    program->AttachShader(fs);
+    program->Link();
+    program->Use();
+    program->SetUniform("u_model", model);
+
+    /*
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vs->m_shader);
     glAttachShader(shaderProgram, fs->m_shader);
@@ -163,16 +178,17 @@ int main(int argc, char* argv[]) {
         LOG_WARNING("Program link failed: {}", infoLog);
     }
     glUseProgram(shaderProgram);
+    */
 
     // Texture
     neu::res_t<neu::Texture> texture = neu::Resources().Get<neu::Texture>("Textures/beast.png");
 
     // Uniform
-    GLint uniform = glGetUniformLocation(shaderProgram, "u_time");
+    //GLint uniform = glGetUniformLocation(shaderProgram, "u_time");
     //ASSERT_MSG(uniform != -1, "Could not find uniform u_time.");
 
-    GLint tex_uniform = glGetUniformLocation(shaderProgram, "u_texture");
-    glUniform1i(tex_uniform, 0);
+    //GLint tex_uniform = glGetUniformLocation(shaderProgram, "u_texture");
+    //glUniform1i(tex_uniform, 0);
     //ASSERT_MSG(tex_uniform != 1, "Could not find uniform u_texture.");
 
     // MAIN LOOP
@@ -188,7 +204,7 @@ int main(int argc, char* argv[]) {
 
         if (neu::GetEngine().GetInput().GetKeyPressed(SDL_SCANCODE_ESCAPE)) quit = true;
 
-        glUniform1f(uniform, neu::GetEngine().GetTime().GetTime());
+        //glUniform1f(uniform, neu::GetEngine().GetTime().GetTime());
 
         // draw
         neu::vec3 color{ 0, 0, 0 };

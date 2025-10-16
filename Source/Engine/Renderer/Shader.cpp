@@ -1,6 +1,5 @@
 #include "EnginePCH.h"
 #include "Shader.h"
-#include <glad/glad.h>
 
 namespace neu {
 	Shader::~Shader() {
