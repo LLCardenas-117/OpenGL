@@ -12,17 +12,12 @@ out vec2 v_texcoord;
 // u_### = uniform
 uniform float u_time;
 uniform mat4 u_model;
+uniform mat4 u_view;
+uniform mat4 u_projection;
 
 void main() {
 	v_color = a_color;
 	v_texcoord = a_texcoord;
-	//gl_Position = vec4(a_position + tan(u_time), 1.0);
-	float frequency = 3.0;
-	float amplitude = 0.3;
-	vec3 position = a_position;
 
-	float offset = sin(u_time * frequency + position.y) * amplitude;
-	position.x += offset;
-
-	gl_Position = u_model * vec4(a_position, 1.0);
+	gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);
 }
