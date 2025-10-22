@@ -16,11 +16,11 @@ int main(int argc, char* argv[]) {
     // OPEN GL
     // Model
     auto model3d = std::make_shared<neu::Model>();
-    model3d->Load("models/sphere.obj");
+    model3d->Load("models/spot.obj");
 
     // Shaders
-    auto vs = neu::Resources().Get<neu::Shader>("shaders/basic.vert", GL_VERTEX_SHADER);
-    auto fs = neu::Resources().Get<neu::Shader>("shaders/basic.frag", GL_FRAGMENT_SHADER);
+    auto vs = neu::Resources().Get<neu::Shader>("shaders/basic_lit.vert", GL_VERTEX_SHADER);
+    auto fs = neu::Resources().Get<neu::Shader>("shaders/basic_lit.frag", GL_FRAGMENT_SHADER);
 
     // Program
     auto program = std::make_shared<neu::Program>();
@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
     glm::vec3 eye{ 0, 0, 5 };
 
     neu::Transform transform{ { 1, 0, 0 } };
+    neu::Transform camera{ { 0, 0, 5 } };
 
     // Projection Matrix
     float aspect = (float)neu::GetEngine().GetRenderer().GetWidth() / (float)neu::GetEngine().GetRenderer().GetHeight();
@@ -41,7 +42,11 @@ int main(int argc, char* argv[]) {
     program->SetUniform("u_projection", projection);
 
     // Texture
-    neu::res_t<neu::Texture> texture = neu::Resources().Get<neu::Texture>("Textures/beast.png");
+    neu::res_t<neu::Texture> texture = neu::Resources().Get<neu::Texture>("Textures/spot_diffuse.png");
+
+    // Lights
+    program->SetUniform("u_ambient_light", glm::vec3{ 0.0f, 0.5f, 0.5f });
+    neu::Transform light{ { 0, 4, 0 } };
 
     // MAIN LOOP
     while (!quit) {
@@ -54,25 +59,29 @@ int main(int argc, char* argv[]) {
         // update
         neu::GetEngine().Update();
 
+        float dt = neu::GetEngine().GetTime().GetDeltaTime();
+
         if (neu::GetEngine().GetInput().GetKeyPressed(SDL_SCANCODE_ESCAPE)) quit = true;
 
         // Model Matrix
-        //glm::mat4 model = glm::mat4(1.0f);
-
-        rotation += neu::GetEngine().GetTime().GetDeltaTime() * 90;
-
-        /*model = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));*/
-        transform.rotation.y += rotation;
-        program->SetUniform("u_model", transform.GetMatrix());
 
         // View Matrix
-        eye.x += neu::GetEngine().GetInput().GetMouseDelta().x * 0.01f;
-        eye.z += neu::GetEngine().GetInput().GetMouseDelta().y * 0.01f;
+        float speed = 10.0f;
+        if (neu::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_SPACE)) camera.position.y += speed * dt;
+        if (neu::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_A)) camera.position.x -= speed * dt;
+        if (neu::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_LCTRL)) camera.position.y -= speed * dt;
+        if (neu::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_D)) camera.position.x += speed * dt;
+        if (neu::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_W)) camera.position.z -= speed * dt;
+        if (neu::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_S)) camera.position.z += speed * dt;
+        transform.rotation.y += 90 * dt;
+        program->SetUniform("u_model", transform.GetMatrix());
 
-        glm::mat4 view = glm::lookAt(eye, eye + glm::vec3{ 0, 0, -1 }, glm::vec3{ 0, 1, 0 });
+        glm::mat4 view = glm::lookAt(camera.position, camera.position + glm::vec3{ 0, 0, -1 }, glm::vec3{ 0, 1, 0 });
         program->SetUniform("u_view", view);
+
+        program->SetUniform("u_light.color", glm::vec3{ 100, 0, 0 });
+        light.position.x = neu::math::sin(neu::GetEngine().GetTime().GetTime() * 10);
+        program->SetUniform("u_light.position", (glm::vec3)(view * glm::vec4(light.position, 1)));
 
         // draw
         neu::vec3 color{ 0, 0, 0 };
