@@ -14,6 +14,9 @@
     <Filter Include="Assets\Textures">
       <UniqueIdentifier>{b19c6153-bcf7-4480-8d4f-c437d508899a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Materials">
+      <UniqueIdentifier>{ec0f0494-44df-4d23-89ba-ee4fd2656c1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -40,6 +43,12 @@
     </None>
     <None Include="..\..\Build\Assets\Shaders\basic_lit.vert">
       <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="..\..\Build\Assets\Shaders\basic_lit.prog">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="..\..\Build\Assets\Materials\spot.mat">
+      <Filter>Assets\Materials</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

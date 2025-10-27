@@ -1,4 +1,10 @@
 #pragma once
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include <imgui.h>
+#include <backends/imgui_impl_sdl3.h>
+#include <backends/imgui_impl_opengl3.h>
+
+
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
@@ -12,7 +18,7 @@ namespace neu {
 	/// Main rendering system that manages the SDL window and renderer.
 	/// Provides methods for initializing the graphics system, clearing the screen,
 	/// drawing primitives (lines, points), rendering textures, and presenting frames.
-	/// This class wraps SDL3's rendering functionality with a simplified interface.
+	/// This class wraps SDL3's rendering functionality with a simplified interface.1
 	/// </summary>
 	class Renderer
 	{

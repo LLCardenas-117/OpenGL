@@ -50,6 +50,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Program.h"
 #include "Renderer/VertexBuffer.h"
+#include "Renderer/Material.h"
 #include "Renderer/Model.h"
 
 // physics
