@@ -22,7 +22,9 @@ uniform struct light {
 
 uniform struct Material 
 {
-	sampler2D texture;
+	sampler2D baseMap;
+	vec3 baseColor;
+
 	float shininess;
 	vec2 tiling;
 	vec2 offset;
@@ -34,7 +36,7 @@ vec3 calculateLight(in vec3 position, in vec3 normal) {
 
 	float intensity = max(dot(light_dir, normal), 0);
 
-	vec3 diffuse = u_light.color * intensity;
+	vec3 diffuse = u_light.color * u_material.baseColor * intensity;
 	
 	// Specular
 	vec3 reflection = reflect(-light_dir, normal);

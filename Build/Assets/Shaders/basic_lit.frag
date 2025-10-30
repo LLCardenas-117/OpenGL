@@ -5,11 +5,12 @@ in vec2 v_texcoord;
 out vec4 f_color;
 
 uniform float u_time;
-uniform sampler2D u_texture;
 
 uniform struct Material 
 {
-	sampler2D texture;
+	sampler2D baseMap;
+	vec3 baseColor;
+
 	float shininess;
 	vec2 tiling;
 	vec2 offset;
@@ -20,5 +21,5 @@ void main() {
 	//float offset = sin(u_time + (gl_FragCoord.x - gl_FragCoord.y));
 	//f_color = vec4(v_color * offset, 1);
 
-	f_color = texture(u_texture, v_texcoord) * vec4(v_color, 1); // * f_color;
+	f_color = texture(u_material.baseMap, v_texcoord) * vec4(v_color, 1); // * f_color;
 }
