@@ -14,5 +14,7 @@ namespace neu {
 
 	public:
 		glm::vec3 color{ 1, 1, 1 };
+		float intensity;
+		float range{ 20 };
 	};
 }
