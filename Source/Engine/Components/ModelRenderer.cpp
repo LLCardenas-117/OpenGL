@@ -30,4 +30,7 @@ namespace neu {
 
 		material = Resources().Get<Material>(materialName);
 	}
+	void ModelRenderer::UpdateGui() {
+		//
+	}
 }
