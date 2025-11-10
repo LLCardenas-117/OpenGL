@@ -5,28 +5,26 @@
 #define DIRECTIONAL 1
 #define SPOT 2
 
-in VS_OUT {
-	// v_### = varyings (vertex -> fragment)
-	vec2 texcoord;
-	vec3 position;
-	vec3 normal;
-} fs_in;
+// a_### = attributes/inputs
+layout (location = 0) in vec3 a_position;
+layout (location = 1) in vec2 a_texcoord;
+layout (location = 2) in vec3 a_normal;
 
-out vec4 f_color;
+// v_### = varyings (vertex -> fragment)
+out VS_OUT
+{
+	vec2 texcoord;
+	vec3 color;
+} vs_out;
+
+// u_### = uniform
+uniform mat4 u_model;
+uniform mat4 u_view;
+uniform mat4 u_projection;
 
 uniform vec3 u_ambient_light;
 
 uniform int u_numLights = 5;
-
-uniform struct Material 
-{
-	sampler2D baseMap;
-	vec3 baseColor;
-
-	float shininess;
-	vec2 tiling;
-	vec2 offset;
-} u_material;
 
 uniform struct Light {
 	int type;
@@ -38,6 +36,16 @@ uniform struct Light {
 	float outerSpotAngle;
 	float innerSpotAngle;
 } u_lights[MAX_LIGHTS];
+
+uniform struct Material 
+{
+	sampler2D baseMap;
+	vec3 baseColor;
+
+	float shininess;
+	vec2 tiling;
+	vec2 offset;
+} u_material;
 
 float calculateAttenuation(in float light_distance, in float range) {
 	float attenuation = max( 0.0, ( 1.0 - ( light_distance / range ) ) );
@@ -83,31 +91,31 @@ vec3 calculateLight(in Light light, in vec3 position, in vec3 normal) {
 	vec3 diffuse = light.color * u_material.baseColor * NdotL;
 	
 	// Specular
-	//vec3 reflection = reflect(-light_dir, normal);
+	vec3 reflection = reflect(-light_dir, normal);
 	vec3 view_dir = normalize(-position);
-	//float RdotV = max(dot(reflection, view_dir), 0);
-	//RdotV = pow(RdotV, u_material.shininess);
-	//vec3 specular = vec3(RdotV);
+	float RdotV = max(dot(reflection, view_dir), 0);
+	RdotV = pow(RdotV, u_material.shininess);
+	vec3 specular = vec3(RdotV);
 
 	// Blinn phong
 	vec3 halfway_dir = normalize(light_dir + view_dir);
-	float NdotH = max(dot(normal, halfway_dir), 0);
-	NdotH = pow(NdotH, u_material.shininess);
-	vec3 specular = vec3(NdotH);
+	float NdotH = max(dot(normal, halfway_dir), 0?);
 	
 
 	return (diffuse + specular) * light.intensity * attenuation;
 }
 
 void main() {
-	//vec3 color = calculateLight(fs_in.position, fs_in.normal);
-	//f_color = texture(u_material.baseMap, fs_in.texcoord) * vec4(color, 1);
-	//f_color = vec4(color, 1);
+	vs_out.texcoord = a_texcoord * u_material.tiling + u_material.offset;
 
-	vec3 color = u_ambient_light;
+	mat4 model_view = u_view * u_model;
+	vec3 position = vec3(model_view * vec4(a_position, 1));
+	vec3 normal = normalize(mat3(model_view) * a_normal);
+
+	vs_out.color = u_ambient_light;
 	for (int i = 0; i < u_numLights; i++) {
-		color += calculateLight( u_lights[i], fs_in.position, fs_in.normal);
+		vs_out.color += calculateLight( u_lights[i], position, normal);
 	}
 
-	f_color = texture(u_material.baseMap, fs_in.texcoord) * vec4(color, 1);
+	gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);
 }

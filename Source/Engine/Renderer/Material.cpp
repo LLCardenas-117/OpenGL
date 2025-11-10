@@ -35,7 +35,7 @@ namespace neu {
 
 	void Material::Bind() {
 		program->Use();
-		if (!baseMap) {
+		if (baseMap) {
 			baseMap->SetActive(GL_TEXTURE0);
 			baseMap->Bind();
 		}
