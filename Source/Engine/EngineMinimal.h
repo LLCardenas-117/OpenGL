@@ -47,6 +47,7 @@
 //#include "Renderer/Text.h"
 #include "Renderer/Texture.h"
 #include "Renderer/TextureAnimation.h"
+#include "Renderer/Cubemap.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Program.h"
 #include "Renderer/VertexBuffer.h"
