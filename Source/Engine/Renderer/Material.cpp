@@ -29,6 +29,10 @@ namespace neu {
 		SERIAL_READ_NAME(document, "emissiveMap", textureName);
 		if (!textureName.empty()) emissiveMap = Resources().Get<Texture>(textureName);
 
+		textureName = "";
+		SERIAL_READ_NAME(document, "normalMap", textureName);
+		if (!textureName.empty()) normalMap = Resources().Get<Texture>(textureName);
+
 		SERIAL_READ(document, baseColor);
 		SERIAL_READ(document, emissiveColor);
 		SERIAL_READ(document, shininess);
@@ -61,6 +65,13 @@ namespace neu {
 			emissiveMap->Bind();
 			program->SetUniform("u_emissiveMap", 2);
 			parameters = (Parameters)((uint32_t)parameters | (uint32_t)Parameters::EmissiveMap);
+		}
+
+		if (normalMap) {
+			normalMap->SetActive(GL_TEXTURE3);
+			normalMap->Bind();
+			program->SetUniform("u_normalMap", 3);
+			parameters = (Parameters)((uint32_t)parameters | (uint32_t)Parameters::NormalMap);
 		}
 
 		program->SetUniform("u_material.baseColor", baseColor);
