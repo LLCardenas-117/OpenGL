@@ -42,24 +42,8 @@ namespace neu {
 	}
 
 	void ModelRenderer::UpdateGui() {
-		/*if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen)) {
-			ImGui::Text("Name: %s", name.c_str());
-
-			ImGui::Text("Shader: %s", program->name.c_str());
-
-			if (baseMap) ImGui::Text("Base Map: %s", baseMap->name.c_str());
-			ImGui::ColorEdit3("Base Color", glm::value_ptr(baseColor));
-
-			if (specularMap) ImGui::Text("Specular Map: %s", specularMap->name.c_str());
-
-			if (emissiveMap) ImGui::Text("Emissive Map: %s", emissiveMap->name.c_str());
-			ImGui::ColorEdit3("Emissive Color", glm::value_ptr(emissiveColor));
-
-			ImGui::DragFloat("Shinieness", &shininess, 0.1f, 2.0f, 256.0f);
-
-			ImGui::DragFloat2("Tiling", glm::value_ptr(tiling), 0.1f);
-
-			ImGui::DragFloat2("Offset", glm::value_ptr(offset), 0.1f);
-		}*/
+		if (model) ImGui::Text("Model: %s", model->name.c_str());
+		if (material) ImGui::Text("Material: %s", material->name.c_str());
+		material->UpdateGui();
 	}
 }
