@@ -30,7 +30,7 @@ namespace neu {
 
 	public:
 		float shininess{ 2 };
-		float ior{ 1.0f };
+		float ior{ 1.1f };
 
 		glm::vec2 tiling{ 1, 1 };
 		glm::vec2 offset{ 0, 0 };

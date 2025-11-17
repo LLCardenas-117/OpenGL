@@ -16,6 +16,8 @@ namespace neu {
 		bool Link();
 		void Use();
 
+		void UpdateGui() override {}
+
 		// uniforms
 		void SetUniform(const std::string& name, float value);
 		void SetUniform(const std::string& name, int value);
