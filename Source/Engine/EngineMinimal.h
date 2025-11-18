@@ -41,12 +41,10 @@
 #include "Audio/AudioSystem.h"
 
 // renderer
-//#include "Renderer/Font.h"
-//#include "Renderer/Mesh.h"
 #include "Renderer/Renderer.h"
-//#include "Renderer/Text.h"
 #include "Renderer/Texture.h"
 #include "Renderer/TextureAnimation.h"
+#include "Renderer/RenderTexture.h"
 #include "Renderer/Cubemap.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Program.h"
