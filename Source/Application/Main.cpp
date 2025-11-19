@@ -50,8 +50,6 @@ int main(int argc, char* argv[]) {
         // Model Matrix
 
         // draw
-        neu::GetEngine().GetRenderer().Clear();
-
         scene->Draw(neu::GetEngine().GetRenderer());
 
         // draw ImGui

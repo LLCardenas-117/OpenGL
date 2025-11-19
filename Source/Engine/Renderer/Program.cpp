@@ -128,12 +128,10 @@ namespace neu {
 		// find uniform location in map
 		auto it = m_uniformLocations.find(name);
 		// if not found, get uniform in program
-		if (glGetUniformLocation)
-		{
-			// get uniform in program, return -1 if not found
+		if (it == m_uniformLocations.end()) {
+			// get uniform in program
 			GLint location = glGetUniformLocation(m_program, name.c_str());
-			if (location == -1)
-			{
+			if (location == -1) {
 				LOG_WARNING("Could not find uniform: {}", name);
 			}
 			m_uniformLocations[name] = location;

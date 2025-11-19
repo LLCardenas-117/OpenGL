@@ -83,41 +83,46 @@ namespace neu {
     /// <param name="renderer">The renderer used to draw the actors.</param>
     void Scene::Draw(Renderer& renderer) {
         // Get light
-        std::vector<LightComponent*> lights;
-        for (auto& actor : m_actors) {
-            if (!actor->active) continue;
-
-            auto light = actor->GetComponent<LightComponent>();
-            if (light && light->active) {
-                lights.push_back(light);
-            }
-        }
+        auto lights = GetActorComponents<LightComponent>();
         
         // Get camera
-        CameraComponent* camera = nullptr;
-        for (auto& actor : m_actors) {
-            if (!actor->active) continue;
+        auto cameras = GetActorComponents<CameraComponent>();
 
-            camera = actor->GetComponent<CameraComponent>();
-            if (camera && camera->active) break;
-        }
-
-        if (!camera) {
+        if (cameras.empty()) {
             LOG_WARNING("No camera active in scene!");
             return;
         }
 
         // Get programs
-        std::set<Program*> programs;
+        //auto programSet = GetActorComponents<ModelRenderer>();
+
+        std::set<Program*> programSet;
         for (auto& actor : m_actors) {
             ModelRenderer* model = actor->GetComponent<ModelRenderer>();
             if (!model || !model->active) continue;
 
             if (model->material && model->material->program) {
-                programs.insert(model->material->program.get());
+                programSet.insert(model->material->program.get());
             }
         }
 
+        std::vector<Program*> programs(programSet.begin(), programSet.end());
+
+        for (auto& camera : cameras) {
+            if (camera->outputTexture) {
+                camera->outputTexture->BindFramebuffer();
+                glViewport(0, 0, camera->outputTexture->m_size.x, camera->outputTexture->m_size.y);
+            }
+            camera->Clear();
+            DrawPass(renderer, programs, lights, camera);
+            if (camera->outputTexture) {
+                camera->outputTexture->UnbindFramebuffer();
+                glViewport(0, 0, renderer.GetWidth(), renderer.GetHeight());
+            }
+        }
+    }
+
+    void Scene::DrawPass(Renderer& renderer, std::vector<Program*>& programs, std::vector<LightComponent*>& lights, CameraComponent* camera) {
         for (auto program : programs) {
             program->Use();
             program->SetUniform("u_ambient_light", m_ambientLight);
