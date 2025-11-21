@@ -13,9 +13,14 @@ int main(int argc, char* argv[]) {
     SDL_Event e;
     bool quit = false;
 
+    // Create render textures
     auto renderTexture = std::make_shared<neu::RenderTexture>();
     renderTexture->Create(512, 512);
     neu::Resources().AddResource("renderTexture", renderTexture);
+
+    renderTexture = std::make_shared<neu::RenderTexture>();
+    renderTexture->Create(1024, 1024);
+    neu::Resources().AddResource("postprocessTexture", renderTexture);
 
     // OPEN GL
     // Model

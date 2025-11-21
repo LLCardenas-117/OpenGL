@@ -61,6 +61,7 @@
 #include "Components/LightComponent.h"
 #include "Components/ModelRenderer.h"
 #include "Components/RotationComponent.h"
+#include "Components/PostProcessComponent.h"
 
 // Gui
 #include "GUI/GUI.h"
